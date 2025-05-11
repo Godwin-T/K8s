@@ -43,7 +43,7 @@ kubectl apply -f etcd-service-monitor.yaml
 Add PV configurations:
 ```bash
 kubectl apply -f pv.yaml
-kubectl apply -f data-processing/datadata-processor-deployment.yaml
+kubectl apply -f data-processing/data-processor-deployment.yaml
 kubectl apply -f metadata-collector/metadata-collector-deployment.yaml
 ```
 
