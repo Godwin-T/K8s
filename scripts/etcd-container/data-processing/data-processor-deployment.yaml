@@ -4,6 +4,7 @@ metadata:
   name: data-processor-pvc
   namespace: monitoring
 spec:
+  volumeName: data-processor-pv
   accessModes:
     - ReadWriteOnce
   resources:
@@ -29,23 +30,23 @@ spec:
     spec:
       containers:
       - name: data-processor
-        image: ${DOCKER_REGISTRY}/data-processor:latest
+        image: freshinit/data-processor:latest
         imagePullPolicy: Always
         env:
         - name: PROCESSING_INTERVAL
           value: "600"
         - name: INPUT_DIR
-          value: "/data"
+          value: "/mnt/metadata-collector"
         - name: OUTPUT_DIR
-          value: "/processed_data"
+          value: "/mnt/processed-data"
         - name: WINDOW_SIZE
           value: "12"
         volumeMounts:
         - name: input-data
-          mountPath: /data
+          mountPath: /mnt/metadata-collector
           readOnly: true
         - name: output-data
-          mountPath: /processed_data
+          mountPath: /mnt/processed-data
         resources:
           limits:
             cpu: "1000m"

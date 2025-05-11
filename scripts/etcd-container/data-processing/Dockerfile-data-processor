@@ -3,15 +3,15 @@ FROM python:3.9-slim
 WORKDIR /app
 
 COPY data_processor.py /app/
-COPY requirements-processor.txt /app/requirements.txt
+COPY requirements.txt /app/requirements.txt
 
 RUN pip install --no-cache-dir -r requirements.txt
 
 ENV PROCESSING_INTERVAL=600
-ENV INPUT_DIR=/data
-ENV OUTPUT_DIR=/processed_data
+ENV INPUT_DIR=/mnt/metadata-collector
+ENV OUTPUT_DIR=/mnt/processed-data
 ENV WINDOW_SIZE=12
 
-VOLUME ["/data", "/processed_data"]
+VOLUME ["/mnt/metadata-collector", "/mnt/processed-data"]
 
 CMD ["python", "data_processor.py"]
