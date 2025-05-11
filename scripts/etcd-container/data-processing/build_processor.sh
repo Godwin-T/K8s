@@ -5,5 +5,3 @@ docker build -t data-processor:latest -f Dockerfile-data-processor .
 docker tag data-processor:latest freshinit/data-processor:latest
 docker push freshinit/data-processor:latest
 
-# Deploy the processor
-kubectl apply -f data-processor-deployment.yaml

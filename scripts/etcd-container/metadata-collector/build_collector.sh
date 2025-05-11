@@ -5,5 +5,3 @@ docker build -t metadata-collector:latest -f Dockerfile-metadata-collector .
 docker tag metadata-collector:latest freshinit/metadata-collector:latest
 docker push freshinit/metadata-collector:latest
 
-# Deploy the collector
-kubectl apply -f metadata-collector-deployment.yaml
