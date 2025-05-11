@@ -1,5 +1,0 @@
-# Add this under spec
-
-# kubectl -n monitoring edit prometheus-prometheus-kube-prometheus-prometheus
-secrets:
-  - etcd-certs
