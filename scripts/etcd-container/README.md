@@ -2,41 +2,19 @@
 
 ## Step 1: Deploy Monitoring Stack
 ```bash
-./setup-monitoring.sh
+./setup-monitoring-helm.sh
 ```
 
 ## Step 2: Configure Audit Logging
 ```bash
+sudo mkdir -p /var/log/kubernetes/audit
 sudo cp audit-policy.yaml /etc/kubernetes/
 ```
 
 Update API server configuration with audit settings:
-```yaml
-spec:
-  containers:
-  - command:
-    - kube-apiserver
-    - --audit-policy-file=/etc/kubernetes/audit-policy.yaml
-    - --audit-log-path=/var/log/kubernetes/audit/audit.log
-    - --audit-log-maxage=30
-    - --audit-log-maxbackup=10
-    - --audit-log-maxsize=100
-    volumeMounts:
-    - mountPath: /etc/kubernetes/audit-policy.yaml
-      name: audit
-      readOnly: true
-    - mountPath: /var/log/kubernetes/audit/
-      name: audit-log
-      readOnly: false
-  volumes:
-  - name: audit
-    hostPath:
-      path: /etc/kubernetes/audit-policy.yaml
-      type: File
-  - name: audit-log
-    hostPath:
-      path: /var/log/kubernetes/audit/
-      type: DirectoryOrCreate
+```bash
+sudo rm /etc/kubernetes/manifests/kube-apiserver.yaml
+sudo mv kube-apiserver.yaml /etc/kubernetes/manifests/
 ```
 
 Restart API server.
@@ -46,7 +24,11 @@ Restart API server.
 ./setup-certificates.sh
 ```
 
-Add to Prometheus configuration:
+```bash
+kubectl -n monitoring edit prometheus prometheus-kube-prometheus-prometheus
+```
+
+Add to Prometheus configuration under spec:
 ```yaml
 secrets:
   - etcd-certs
@@ -58,16 +40,7 @@ kubectl apply -f etcd-service.yaml
 kubectl apply -f etcd-service-monitor.yaml
 ```
 
-## Step 4: Set up Metadata Collection Service
+Add PV configurations:
 ```bash
-export DOCKER_REGISTRY=<your-registry-name>
-cd metadata-collector
-./build_collector.sh
-cd ..
-```
-
-## Step 5: Set up Data Processing Service
-```bash
-cd data-processing
-./build_processor.sh
+kubectl apply -f pv.yaml
 ```
