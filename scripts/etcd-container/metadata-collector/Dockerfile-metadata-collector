@@ -8,8 +8,8 @@ COPY requirements.txt /app/
 RUN pip install --no-cache-dir -r requirements.txt
 
 ENV COLLECTION_INTERVAL=300
-ENV OUTPUT_DIR=/data
+ENV OUTPUT_DIR=/mnt/metadata-collector
 
-VOLUME ["/data"]
+VOLUME ["/mnt/metadata-collector"]
 
 CMD ["python", "metadata_collector.py"]

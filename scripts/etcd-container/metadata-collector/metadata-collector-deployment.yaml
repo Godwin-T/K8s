@@ -44,6 +44,7 @@ metadata:
   name: metadata-collector-pvc
   namespace: monitoring
 spec:
+  volumeName: metadata-collector-pv
   accessModes:
     - ReadWriteOnce
   resources:
@@ -70,7 +71,7 @@ spec:
       serviceAccountName: metadata-collector
       containers:
       - name: metadata-collector
-        image: ${DOCKER_REGISTRY}/metadata-collector:latest
+        image: freshinit/metadata-collector:latest
         imagePullPolicy: Always
         env:
         - name: COLLECTION_INTERVAL
