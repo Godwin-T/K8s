@@ -9,5 +9,5 @@ spec:
   resources:
     requests:
       storage: 5Gi
-  storageClassName: manual  # Must match the PV's storage class
+  storageClassName: ""  # Must match the PV's storage class
   volumeName: loki-pv  # This explicitly references your PV name
