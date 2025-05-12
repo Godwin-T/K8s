@@ -1,4 +1,4 @@
-# Kubernetes LSTM Data Pipeline
+# Self Hosted Kubernetes 
 
 This repository contains scripts to set up a self-hosted Kubernetes cluster 
 
