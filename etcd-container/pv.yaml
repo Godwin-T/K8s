@@ -11,8 +11,7 @@ spec:
   hostPath:
     path: "/mnt/loki"  # Ensure this path exists on your node
   persistentVolumeReclaimPolicy: Retain
-
-
+---
 # pv-metadata-collector.yaml
 apiVersion: v1
 kind: PersistentVolume
@@ -40,5 +39,3 @@ spec:
   hostPath:
     path: "/mnt/data-processor"
   persistentVolumeReclaimPolicy: Retain
-
-
