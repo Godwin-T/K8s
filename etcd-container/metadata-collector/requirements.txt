@@ -1,0 +1,3 @@
+kubernetes
+pandas
+prometheus-client==0.16.0

@@ -1,0 +1,93 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: data-processor-pvc
+  namespace: monitoring
+spec:
+  volumeName: data-processor-pv
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: data-processor
+  namespace: monitoring
+  labels:
+    app: data-processor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: data-processor
+  template:
+    metadata:
+      labels:
+        app: data-processor
+    spec:
+      containers:
+      - name: data-processor
+        image: freshinit/data-processor:latest
+        imagePullPolicy: Always
+        env:
+        - name: PROCESSING_INTERVAL
+          value: "600"
+        - name: INPUT_DIR
+          value: "/mnt/metadata-collector"
+        - name: OUTPUT_DIR
+          value: "/mnt/processed-data"
+        - name: WINDOW_SIZE
+          value: "12"
+        volumeMounts:
+        - name: input-data
+          mountPath: /mnt/metadata-collector
+          readOnly: true
+        - name: output-data
+          mountPath: /mnt/processed-data
+        resources:
+          limits:
+            cpu: "1000m"
+            memory: "1Gi"
+          requests:
+            cpu: "500m"
+            memory: "512Mi"
+      volumes:
+      - name: input-data
+        persistentVolumeClaim:
+          claimName: metadata-collector-pvc
+      - name: output-data
+        persistentVolumeClaim:
+          claimName: data-processor-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: data-processor
+  namespace: monitoring
+  labels:
+    app: data-processor
+spec:
+  ports:
+  - port: 8001
+    targetPort: 8001
+    name: metrics
+  selector:
+    app: data-processor
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: data-processor
+  namespace: monitoring
+  labels:
+    app: data-processor
+spec:
+  selector:
+    matchLabels:
+      app: data-processor
+  endpoints:
+  - port: metrics
+    interval: "30s"

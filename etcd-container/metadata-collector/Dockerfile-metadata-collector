@@ -1,0 +1,15 @@
+FROM python:3.9-slim
+
+WORKDIR /app
+
+COPY metadata_collector.py /app/
+COPY requirements.txt /app/
+
+RUN pip install --no-cache-dir -r requirements.txt
+
+ENV COLLECTION_INTERVAL=300
+ENV OUTPUT_DIR=/mnt/metadata-collector
+
+VOLUME ["/mnt/metadata-collector"]
+
+CMD ["python", "metadata_collector.py"]
